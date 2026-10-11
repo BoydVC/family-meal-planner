@@ -1,0 +1,735 @@
+{
+  "meta": {
+    "title": "Family Meal Planner — sample recipes",
+    "disclaimer": "EXAMPLE / sample recipe pack for TokenMax demo. Not the Boyd family's real menu or grocery list.",
+    "source": "EXAMPLE / sample",
+    "version": 1,
+    "household": "Boyd (Char & Vic practice nights)",
+    "aisles": [
+      "Produce",
+      "Meat & Seafood",
+      "Dairy & Eggs",
+      "Bakery",
+      "Pantry",
+      "Frozen",
+      "Snacks",
+      "Other"
+    ]
+  },
+  "practiceDefaults": {
+    "Mon": false,
+    "Tue": true,
+    "Wed": true,
+    "Thu": true,
+    "Fri": false,
+    "Sat": false,
+    "Sun": false
+  },
+  "practiceNotes": {
+    "Tue": "Char Aspire + Vic practices typical",
+    "Wed": "Vic Hornets / API practice nights",
+    "Thu": "Char Aspire (St Mary's) — Boyds drive"
+  },
+  "meals": [
+    {
+      "id": "sheet-tacos",
+      "name": "Sheet-Pan Chicken Tacos",
+      "minutes": 25,
+      "fast": true,
+      "tags": [
+        "mexican",
+        "kid-friendly"
+      ],
+      "emoji": "🌮",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "chicken thighs",
+          "qty": "1.5 lb",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "taco seasoning",
+          "qty": "1 pkt",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "bell peppers",
+          "qty": "2",
+          "aisle": "Produce"
+        },
+        {
+          "item": "onion",
+          "qty": "1",
+          "aisle": "Produce"
+        },
+        {
+          "item": "corn tortillas",
+          "qty": "12",
+          "aisle": "Bakery"
+        },
+        {
+          "item": "shredded cheese",
+          "qty": "8 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "salsa",
+          "qty": "1 jar",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "lime",
+          "qty": "2",
+          "aisle": "Produce"
+        }
+      ],
+      "steps": [
+        "Toss chicken + peppers + onion with seasoning.",
+        "Roast 425°F ~18 min.",
+        "Warm tortillas, assemble, squeeze lime."
+      ]
+    },
+    {
+      "id": "pasta-pesto",
+      "name": "Pesto Pasta with Broccoli",
+      "minutes": 18,
+      "fast": true,
+      "tags": [
+        "italian",
+        "vegetarian-ok"
+      ],
+      "emoji": "🍝",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "pasta (penne)",
+          "qty": "1 lb",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "basil pesto",
+          "qty": "1 jar",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "broccoli florets",
+          "qty": "1 bag",
+          "aisle": "Produce"
+        },
+        {
+          "item": "parmesan",
+          "qty": "4 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "garlic",
+          "qty": "2 cloves",
+          "aisle": "Produce"
+        },
+        {
+          "item": "olive oil",
+          "qty": "2 tbsp",
+          "aisle": "Pantry"
+        }
+      ],
+      "steps": [
+        "Boil pasta; add broccoli last 3 min.",
+        "Drain, toss with pesto + oil + garlic.",
+        "Top with parm."
+      ]
+    },
+    {
+      "id": "quesadillas",
+      "name": "Cheesy Quesadillas + Fruit",
+      "minutes": 15,
+      "fast": true,
+      "tags": [
+        "mexican",
+        "kid-favorite"
+      ],
+      "emoji": "🧀",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "flour tortillas",
+          "qty": "8",
+          "aisle": "Bakery"
+        },
+        {
+          "item": "shredded cheese",
+          "qty": "12 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "rotisserie chicken",
+          "qty": "2 cups",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "apples",
+          "qty": "4",
+          "aisle": "Produce"
+        },
+        {
+          "item": "sour cream",
+          "qty": "1 cup",
+          "aisle": "Dairy & Eggs"
+        }
+      ],
+      "steps": [
+        "Fill tortillas with cheese + chicken.",
+        "Skillet 2–3 min/side.",
+        "Slice apples on the side."
+      ]
+    },
+    {
+      "id": "stir-fry",
+      "name": "20-Min Beef Stir-Fry",
+      "minutes": 20,
+      "fast": true,
+      "tags": [
+        "asian",
+        "one-pan"
+      ],
+      "emoji": "🥘",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "flank steak strips",
+          "qty": "1 lb",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "frozen stir-fry veggies",
+          "qty": "1 bag",
+          "aisle": "Frozen"
+        },
+        {
+          "item": "soy sauce",
+          "qty": "1/4 cup",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "ginger",
+          "qty": "1 tbsp",
+          "aisle": "Produce"
+        },
+        {
+          "item": "garlic",
+          "qty": "3 cloves",
+          "aisle": "Produce"
+        },
+        {
+          "item": "rice (microwave)",
+          "qty": "2 cups",
+          "aisle": "Frozen"
+        },
+        {
+          "item": "sesame oil",
+          "qty": "1 tbsp",
+          "aisle": "Pantry"
+        }
+      ],
+      "steps": [
+        "Sear beef hot & fast.",
+        "Add veggies + sauce.",
+        "Serve over microwaved rice."
+      ]
+    },
+    {
+      "id": "pizza-night",
+      "name": "Friday Pizza Night",
+      "minutes": 22,
+      "fast": true,
+      "tags": [
+        "italian",
+        "fun"
+      ],
+      "emoji": "🍕",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "pizza dough",
+          "qty": "2 balls",
+          "aisle": "Bakery"
+        },
+        {
+          "item": "pizza sauce",
+          "qty": "1 jar",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "mozzarella",
+          "qty": "16 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "pepperoni",
+          "qty": "1 pack",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "bell pepper",
+          "qty": "1",
+          "aisle": "Produce"
+        }
+      ],
+      "steps": [
+        "Stretch dough on sheet pans.",
+        "Sauce, cheese, toppings.",
+        "Bake 475°F ~12–14 min."
+      ]
+    },
+    {
+      "id": "salmon-sheets",
+      "name": "Sheet Salmon + Asparagus",
+      "minutes": 22,
+      "fast": true,
+      "tags": [
+        "seafood",
+        "healthy"
+      ],
+      "emoji": "🐟",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "salmon fillets",
+          "qty": "4",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "asparagus",
+          "qty": "1 bunch",
+          "aisle": "Produce"
+        },
+        {
+          "item": "lemon",
+          "qty": "2",
+          "aisle": "Produce"
+        },
+        {
+          "item": "olive oil",
+          "qty": "3 tbsp",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "baby potatoes",
+          "qty": "1.5 lb",
+          "aisle": "Produce"
+        },
+        {
+          "item": "butter",
+          "qty": "2 tbsp",
+          "aisle": "Dairy & Eggs"
+        }
+      ],
+      "steps": [
+        "Par-roast potatoes 10 min.",
+        "Add salmon + asparagus, roast 12 min.",
+        "Finish with lemon + butter."
+      ]
+    },
+    {
+      "id": "burger-bowls",
+      "name": "Burger Bowls (no bun rush)",
+      "minutes": 20,
+      "fast": true,
+      "tags": [
+        "american",
+        "kid-friendly"
+      ],
+      "emoji": "🍔",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "ground beef",
+          "qty": "1.5 lb",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "romaine",
+          "qty": "2 heads",
+          "aisle": "Produce"
+        },
+        {
+          "item": "cherry tomatoes",
+          "qty": "1 pint",
+          "aisle": "Produce"
+        },
+        {
+          "item": "pickles",
+          "qty": "1 jar",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "cheddar slices",
+          "qty": "8",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "burger sauce",
+          "qty": "1 bottle",
+          "aisle": "Pantry"
+        }
+      ],
+      "steps": [
+        "Make smash patties.",
+        "Build bowls: lettuce, tomato, pickles, cheese, sauce."
+      ]
+    },
+    {
+      "id": "soup-grilled",
+      "name": "Tomato Soup + Grilled Cheese",
+      "minutes": 20,
+      "fast": true,
+      "tags": [
+        "comfort",
+        "rainy-day"
+      ],
+      "emoji": "🥣",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "tomato soup",
+          "qty": "2 cans",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "sandwich bread",
+          "qty": "1 loaf",
+          "aisle": "Bakery"
+        },
+        {
+          "item": "cheddar",
+          "qty": "8 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "butter",
+          "qty": "4 tbsp",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "milk",
+          "qty": "1 cup",
+          "aisle": "Dairy & Eggs"
+        }
+      ],
+      "steps": [
+        "Heat soup with splash of milk.",
+        "Grill cheese sandwiches.",
+        "Dip away."
+      ]
+    },
+    {
+      "id": "chicken-rice",
+      "name": "One-Pot Chicken & Rice",
+      "minutes": 40,
+      "fast": false,
+      "tags": [
+        "comfort",
+        "weekend"
+      ],
+      "emoji": "🍗",
+      "servings": 5,
+      "ingredients": [
+        {
+          "item": "chicken thighs",
+          "qty": "2 lb",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "long-grain rice",
+          "qty": "1.5 cups",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "chicken broth",
+          "qty": "3 cups",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "onion",
+          "qty": "1",
+          "aisle": "Produce"
+        },
+        {
+          "item": "carrots",
+          "qty": "3",
+          "aisle": "Produce"
+        },
+        {
+          "item": "peas (frozen)",
+          "qty": "1 cup",
+          "aisle": "Frozen"
+        },
+        {
+          "item": "garlic",
+          "qty": "3 cloves",
+          "aisle": "Produce"
+        }
+      ],
+      "steps": [
+        "Brown chicken, set aside.",
+        "Sauté onion/carrot/garlic, add rice + broth.",
+        "Nestle chicken, simmer covered ~25 min; stir in peas."
+      ]
+    },
+    {
+      "id": "lasagna",
+      "name": "Weekend Lasagna",
+      "minutes": 75,
+      "fast": false,
+      "tags": [
+        "italian",
+        "make-ahead"
+      ],
+      "emoji": "🍝",
+      "servings": 8,
+      "ingredients": [
+        {
+          "item": "lasagna noodles",
+          "qty": "1 box",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "ground beef",
+          "qty": "1.5 lb",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "marinara",
+          "qty": "2 jars",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "ricotta",
+          "qty": "15 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "mozzarella",
+          "qty": "16 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "egg",
+          "qty": "1",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "spinach",
+          "qty": "1 bag",
+          "aisle": "Produce"
+        }
+      ],
+      "steps": [
+        "Brown beef, mix with marinara.",
+        "Layer noodles, ricotta+egg+spinach, sauce, mozzarella.",
+        "Bake 375°F 45–50 min; rest 10."
+      ]
+    },
+    {
+      "id": "roast-chicken",
+      "name": "Sunday Roast Chicken",
+      "minutes": 70,
+      "fast": false,
+      "tags": [
+        "sunday",
+        "classic"
+      ],
+      "emoji": "🍗",
+      "servings": 5,
+      "ingredients": [
+        {
+          "item": "whole chicken",
+          "qty": "1 (4–5 lb)",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "carrots",
+          "qty": "4",
+          "aisle": "Produce"
+        },
+        {
+          "item": "potatoes",
+          "qty": "2 lb",
+          "aisle": "Produce"
+        },
+        {
+          "item": "onion",
+          "qty": "1",
+          "aisle": "Produce"
+        },
+        {
+          "item": "fresh herbs",
+          "qty": "1 bunch",
+          "aisle": "Produce"
+        },
+        {
+          "item": "butter",
+          "qty": "4 tbsp",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "lemon",
+          "qty": "1",
+          "aisle": "Produce"
+        }
+      ],
+      "steps": [
+        "Season bird, stuff lemon + herbs.",
+        "Surround with veg.",
+        "Roast 425°F ~60–70 min to 165°F."
+      ]
+    },
+    {
+      "id": "breakfast-dinner",
+      "name": "Breakfast-for-Dinner",
+      "minutes": 25,
+      "fast": true,
+      "tags": [
+        "fun",
+        "kid-favorite"
+      ],
+      "emoji": "🥞",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "pancake mix",
+          "qty": "1 box",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "eggs",
+          "qty": "8",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "bacon",
+          "qty": "1 pack",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "maple syrup",
+          "qty": "1 bottle",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "butter",
+          "qty": "4 tbsp",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "berries",
+          "qty": "1 pint",
+          "aisle": "Produce"
+        }
+      ],
+      "steps": [
+        "Oven-bake bacon.",
+        "Pancakes + scrambled eggs.",
+        "Berries + syrup."
+      ]
+    },
+    {
+      "id": "chili",
+      "name": "Weeknight Chili",
+      "minutes": 35,
+      "fast": false,
+      "tags": [
+        "american",
+        "batch"
+      ],
+      "emoji": "🌶️",
+      "servings": 6,
+      "ingredients": [
+        {
+          "item": "ground turkey",
+          "qty": "1.5 lb",
+          "aisle": "Meat & Seafood"
+        },
+        {
+          "item": "kidney beans",
+          "qty": "2 cans",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "diced tomatoes",
+          "qty": "2 cans",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "onion",
+          "qty": "1",
+          "aisle": "Produce"
+        },
+        {
+          "item": "chili powder",
+          "qty": "2 tbsp",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "cheddar",
+          "qty": "8 oz",
+          "aisle": "Dairy & Eggs"
+        },
+        {
+          "item": "cornbread mix",
+          "qty": "1 box",
+          "aisle": "Pantry"
+        }
+      ],
+      "steps": [
+        "Brown turkey + onion.",
+        "Add tomatoes, beans, spices; simmer 20.",
+        "Bake cornbread alongside."
+      ]
+    },
+    {
+      "id": "fish-sticks",
+      "name": "Fish Sticks + Veg Cups",
+      "minutes": 18,
+      "fast": true,
+      "tags": [
+        "kid-favorite",
+        "freezer"
+      ],
+      "emoji": "🐟",
+      "servings": 4,
+      "ingredients": [
+        {
+          "item": "fish sticks",
+          "qty": "1 box",
+          "aisle": "Frozen"
+        },
+        {
+          "item": "frozen peas",
+          "qty": "1 bag",
+          "aisle": "Frozen"
+        },
+        {
+          "item": "carrots (baby)",
+          "qty": "1 bag",
+          "aisle": "Produce"
+        },
+        {
+          "item": "ranch",
+          "qty": "1 bottle",
+          "aisle": "Pantry"
+        },
+        {
+          "item": "tartar sauce",
+          "qty": "1 jar",
+          "aisle": "Pantry"
+        }
+      ],
+      "steps": [
+        "Bake fish sticks per box.",
+        "Microwave peas.",
+        "Serve with carrot cups + dips."
+      ]
+    }
+  ]
+}
