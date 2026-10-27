@@ -133,10 +133,14 @@
   }
 
   function renderWeek() {
+    const counts = model.week.counts || { planned: 0, leftover: 0, open: 0 };
+    $("deskSummary").textContent =
+      `${model.week.label} · ${model.week.timezone || "America/New_York"} · ${counts.planned} planned · ${counts.leftover} leftover · EXAMPLE/SYNTHETIC`;
     const grid = $("weekGrid");
     grid.innerHTML = model.week.days
       .map((day) => {
         const meal = day.meal;
+        const slot = day.slot === "leftover" ? "leftover" : "planned";
         const applied = day.applied ? `<p class="day-note">Applied: ${escapeHtml(day.applied.text)}</p>` : "";
         const held = day.held ? `<p class="day-note draft">Held draft</p>` : "";
         const body = meal
@@ -146,16 +150,25 @@
               <div class="meal-meta"><span class="badge ${meal.fast ? "fast" : "slow"}">${meal.minutes} min</span></div>
               ${applied}${held}
             </div>`
-          : `<div class="day-body"><div class="day-empty">Choose a dinner${day.practice ? " (fast)" : ""}</div>${applied}${held}</div>`;
-        return `<article class="day-card ${day.practice ? "practice" : ""}" data-day="${day.day}">
+          : `<div class="day-body"><div class="day-empty">Open slot${day.practice ? " · fast dinner" : ""}</div>${applied}${held}</div>`;
+        const leftoverDisabled = meal ? "" : "disabled";
+        return `<article class="day-card ${day.practice ? "practice" : ""} ${day.today ? "today" : ""} ${slot}" data-day="${day.day}">
           <div class="day-head">
-            <span class="day-name">${escapeHtml(day.name)}</span>
-            <button type="button" class="switch" role="switch" aria-checked="${day.practice ? "true" : "false"}" data-practice="${day.day}" data-testid="practice-${day.day}">
+            <div>
+              <span class="day-name">${escapeHtml(day.day)}</span>
+              <span class="day-date">${escapeHtml(day.dateLabel || "")}</span>
+            </div>
+            <button type="button" class="switch" role="switch" aria-checked="${day.practice ? "true" : "false"}" data-practice="${day.day}" data-testid="practice-${day.day}" aria-label="${escapeHtml(day.name)} practice night">
               <span class="switch-knob" aria-hidden="true"></span>
               <span>${day.practice ? "Practice" : "Home"}</span>
             </button>
           </div>
+          ${day.today ? '<span class="today-chip">Today · ET</span>' : ""}
           ${body}
+          <div class="slot-toggle" role="group" aria-label="${escapeHtml(day.name)} planned or leftover">
+            <button type="button" data-slot="${day.day}" data-value="planned" aria-pressed="${slot === "planned" ? "true" : "false"}" data-testid="slot-${day.day}-planned">Planned</button>
+            <button type="button" data-slot="${day.day}" data-value="leftover" aria-pressed="${slot === "leftover" ? "true" : "false"}" data-testid="slot-${day.day}-leftover" ${leftoverDisabled}>Leftover</button>
+          </div>
           <div class="day-actions">
             <button type="button" class="btn ghost" data-choose="${day.day}">Choose</button>
             <button type="button" class="btn ghost" data-swap="${day.day}" data-testid="swap-${day.day}">Swap</button>
@@ -170,9 +183,20 @@
     const empty = $("groceryEmpty");
     const aisles = model.grocery.aisles || [];
     const total = aisles.reduce((sum, aisle) => sum + aisle.items.length, 0);
+    const skipped = model.grocery.skippedLeftovers || [];
     empty.hidden = total > 0;
+    if (!total && skipped.length) {
+      empty.hidden = false;
+      empty.querySelector("p").textContent =
+        "Every filled night is marked leftover, so the grocery list is empty. Nothing was ordered.";
+    } else {
+      empty.querySelector("p").textContent = "No meals planned yet. Fill the week grid first.";
+    }
     const saved = checks();
-    stack.innerHTML = aisles
+    const skipNote = skipped.length
+      ? `<p class="hint skip-note">Leftover, not shopped: ${skipped.map(escapeHtml).join(", ")}. Local mark only.</p>`
+      : "";
+    stack.innerHTML = skipNote + aisles
       .map((aisle) => {
         const lines = aisle.items
           .map((item) => {
@@ -202,17 +226,18 @@
     $("fridgeGrid").innerHTML = model.fridge.days
       .map((day) => {
         const note = day.note ? `<div class="fn note">${escapeHtml(day.note)}</div>` : "";
+        const slot = day.slot === "leftover" ? "Leftover" : "Planned";
         if (!day.mealName) {
           return `<div class="fridge-day ${day.practice ? "practice" : ""}">
-            <div class="dn">${escapeHtml(day.day)}${day.practice ? " ⚡" : ""}</div>
-            <div class="empty-f">TBD</div>
+            <div class="dn">${escapeHtml(day.day)} ${escapeHtml(day.dateLabel || "")}${day.practice ? " ⚡" : ""}</div>
+            <div class="empty-f">Open</div>
             ${note}
           </div>`;
         }
-        return `<div class="fridge-day ${day.practice ? "practice" : ""}">
-          <div class="dn">${escapeHtml(day.day)}${day.practice ? " ⚡" : ""}</div>
+        return `<div class="fridge-day ${day.practice ? "practice" : ""} ${day.slot === "leftover" ? "leftover" : ""}">
+          <div class="dn">${escapeHtml(day.day)} ${escapeHtml(day.dateLabel || "")}${day.practice ? " ⚡" : ""}</div>
           <div class="fn">${escapeHtml(day.emoji || "")} ${escapeHtml(day.mealName)}</div>
-          <div class="fm">${day.minutes} min</div>
+          <div class="fm">${day.minutes} min · ${slot}</div>
           ${note}
         </div>`;
       })
@@ -306,6 +331,7 @@
   }
 
   document.addEventListener("click", async (event) => {
+    const slot = event.target.closest("[data-slot]");
     const practice = event.target.closest("[data-practice]");
     const swap = event.target.closest("[data-swap]");
     const choose = event.target.closest("[data-choose]");
@@ -314,7 +340,15 @@
     const apply = event.target.closest("[data-apply]");
     const probe = event.target.closest("[data-probe]");
     try {
-      if (practice) {
+      if (slot) {
+        if (slot.disabled) return;
+        const day = slot.dataset.slot;
+        const value = slot.dataset.value;
+        const result = await post("/api/week/slot", { day, slot: value });
+        const label = value === "leftover" ? "leftover, off the grocery list" : "planned";
+        await refresh(`${day} is ${label}. Nothing was ordered.`);
+        if (result.ordered) toast("Refusing a response that claims an order.");
+      } else if (practice) {
         const day = practice.dataset.practice;
         const on = practice.getAttribute("aria-checked") !== "true";
         await post("/api/week/practice", { day, on });

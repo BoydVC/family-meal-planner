@@ -43,14 +43,15 @@
     <section id="screen-week" class="screen active" role="tabpanel">
       <div class="toolbar">
         <div class="toolbar-left">
-          <h2>Dinner week</h2>
-          <p class="hint">Flip a Practice switch on sports nights. Swap keeps those nights on fast meals.</p>
+          <h2>Week desk</h2>
+          <p class="hint">Monday through Sunday in America/New_York. Planned means cook and shop. Leftover means it is already in the house and stays off the grocery list. Marking a slot does not order food.</p>
         </div>
         <div class="toolbar-actions">
           <button type="button" class="btn" id="btnShuffle">Shuffle week</button>
           <button type="button" class="btn ghost" id="btnClear">Clear</button>
         </div>
       </div>
+      <p class="desk-summary" id="deskSummary">EXAMPLE/SYNTHETIC · America/New_York</p>
       <div class="week-grid" id="weekGrid" aria-label="Monday through Sunday dinners"></div>
     </section>
 
@@ -58,7 +59,7 @@
       <div class="toolbar">
         <div class="toolbar-left">
           <h2>Grocery list</h2>
-          <p class="hint">Merged by aisle from this week's meals. Same item, same unit, one line.</p>
+          <p class="hint">Merged by aisle from planned cooks. Leftover nights stay off this list. Nothing here is sent to a store.</p>
         </div>
         <div class="toolbar-actions">
           <button type="button" class="btn" id="btnCopy">Copy list</button>
@@ -112,6 +113,7 @@
         <h2>Two-minute how-to</h2>
         <ol class="about-list">
           <li>Run <code>npm start</code> and open <code>http://127.0.0.1:4309/</code>.</li>
+          <li>Read the week desk: Monday–Sunday, America/New_York. Mark Planned or Leftover. Leftover does not order anything.</li>
           <li>Flip a Practice switch. Practice nights keep fast meals.</li>
           <li>Press Swap or Choose to change a dinner.</li>
           <li>Open Grocery and read the aisle merge.</li>
@@ -119,7 +121,7 @@
           <li>On Notes, type a reminder, press Hold, then Apply.</li>
         </ol>
         <h2>Refused gates</h2>
-        <p>These actions answer 403. Checking one does not order, check out, invent a meal, share outside this computer, or text a child.</p>
+        <p>These actions answer 403. Apply stores a local note and does not unlock them. Checking one does not order, check out, invent a meal, share outside this computer, or text a child. This page never reports an Instacart or auto-order success.</p>
         <ul class="gate-list" id="gateList"></ul>
         <p class="muted" id="aboutStats"></p>
       </div>

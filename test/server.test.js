@@ -78,11 +78,14 @@ test("pages and meals stay EXAMPLE/SYNTHETIC", async (t) => {
   assert.match(page.body, /Not KPD/);
   assert.match(page.body, /Practice/);
   assert.match(page.body, /127\.0\.0\.1/);
+  assert.match(page.body, /America\/New_York/);
+  assert.match(page.body, /Leftover/);
   const app = await call(ctx.base, "/app.js");
   assert.match(app.body, /role="switch"/);
   assert.match(app.body, /data-hold/);
   assert.match(app.body, /data-apply/);
   assert.match(app.body, /data-swap/);
+  assert.match(app.body, /data-slot/);
   const meals = await call(ctx.base, "/api/meals");
   assert.equal(meals.body.meta.kpd, false);
   assert.ok(meals.body.meals.length > 0);
@@ -131,6 +134,62 @@ test("practice switches, swaps, aisle merge, and fridge print", async (t) => {
   assert.equal(fridge.body.days.length, 7);
   assert.equal(fridge.body.kpd, false);
   assert.equal(fridge.body.classification, "EXAMPLE/SYNTHETIC");
+  assert.equal(fridge.body.timezone, "America/New_York");
+});
+
+test("planned versus leftover is local and does not unlock auto_order", async (t) => {
+  const ctx = await boot();
+  t.after(() => shutdown(ctx.server));
+
+  const week = await call(ctx.base, "/api/week");
+  assert.equal(week.body.timezone, "America/New_York");
+  assert.deepEqual(
+    week.body.days.map((day) => day.day),
+    ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  );
+  assert.equal(week.body.days.every((day) => day.slot === "planned"), true);
+
+  const blocked = await post(ctx.base, "/api/week/slot", {
+    day: "Mon",
+    slot: "leftover",
+    action: "auto_order",
+  });
+  assert.equal(blocked.status, 403);
+  assert.equal(blocked.body.gate, "auto_order");
+  assert.equal(blocked.body.ok, false);
+
+  const still = await call(ctx.base, "/api/week");
+  assert.equal(still.body.days.find((day) => day.day === "Mon").slot, "planned");
+
+  const empty = await post(ctx.base, "/api/week/clear");
+  assert.equal(empty.status, 200);
+  const needsMeal = await post(ctx.base, "/api/week/slot", { day: "Mon", slot: "leftover" });
+  assert.equal(needsMeal.status, 409);
+
+  await post(ctx.base, "/api/week/meal", { day: "Mon", mealId: "burger-bowls" });
+  await post(ctx.base, "/api/week/meal", { day: "Wed", mealId: "pasta-pesto" });
+  await post(ctx.base, "/api/week/meal", { day: "Thu", mealId: "stir-fry" });
+  const marked = await post(ctx.base, "/api/week/slot", { day: "Wed", slot: "leftover" });
+  assert.equal(marked.status, 200);
+  assert.equal(marked.body.slot, "leftover");
+  assert.equal(marked.body.ordered, false);
+  assert.equal(marked.body.external, false);
+  assert.equal(marked.body.transport, "local-stub");
+  const garlic = marked.body.grocery.aisles
+    .find((aisle) => aisle.aisle === "Produce")
+    .items.find((item) => item.item === "garlic");
+  assert.equal(garlic.qty, "3 cloves");
+  assert.deepEqual(marked.body.grocery.skippedLeftovers, ["Wed"]);
+
+  const disk = JSON.parse(fs.readFileSync(ctx.storePath, "utf8"));
+  assert.equal(disk.slots.Wed, "leftover");
+  assert.equal(disk.external, false);
+
+  const order = await post(ctx.base, "/api/auto_order", { day: "Wed", apply: true });
+  assert.equal(order.status, 403);
+  assert.equal(order.body.gate, "auto_order");
+  assert.equal(order.body.ok, false);
+  assert.equal(order.body.sent, undefined);
 });
 
 test("hold then apply is a local stub and survives a restart", async (t) => {
