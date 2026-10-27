@@ -8,3 +8,5 @@ __pycache__/
 *.pid
 .DS_Store
 .cache/
+data/.local-state.json
+data/.local-state.json.tmp
