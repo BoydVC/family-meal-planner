@@ -17,7 +17,7 @@ shot() {
   shift 3 || true
   local prof
   prof="$(mktemp -d /tmp/fmpshot.XXXX)"
-  "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
+  timeout 20 "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
     --run-all-compositor-stages-before-draw --virtual-time-budget=8000 \
     --window-size="$size" --user-data-dir="$prof" --screenshot="$out" "$@" "$url" >/dev/null 2>&1
   rm -rf "$prof"
