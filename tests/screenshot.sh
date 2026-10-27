@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 PORT="${PORT:-4309}"
 CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
 mkdir -p screenshots
-if ! ss -ltn | grep -q "127.0.0.1:$PORT "; then
+if ! curl -sf "http://127.0.0.1:$PORT/api/health" >/dev/null; then
   STORE_PATH="$(mktemp)" QUIET=1 nohup npm start > "/tmp/family-meal-planner-$PORT.log" 2>&1 &
   for _ in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
     curl -sf "http://127.0.0.1:$PORT/api/health" >/dev/null && break
@@ -21,12 +21,30 @@ curl -sf -X POST "http://127.0.0.1:$PORT/api/week/slot" \
 shot() {
   local url="$1" out="$2" size="$3"
   shift 3 || true
-  local prof
+  local prof pid i
   prof="$(mktemp -d /tmp/fmpshot.XXXX)"
-  timeout 20 "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
+  rm -f "$out"
+  "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
     --run-all-compositor-stages-before-draw --virtual-time-budget=8000 \
-    --window-size="$size" --user-data-dir="$prof" --screenshot="$out" "$@" "$url" >/dev/null 2>&1
-  rm -rf "$prof"
+    --window-size="$size" --user-data-dir="$prof" --screenshot="$out" "$@" "$url" >/dev/null 2>&1 &
+  pid=$!
+  for i in $(seq 1 50); do
+    if [[ -s "$out" ]]; then
+      sleep 0.4
+      kill "$pid" 2>/dev/null || true
+      wait "$pid" 2>/dev/null || true
+      break
+    fi
+    sleep 0.4
+  done
+  kill "$pid" 2>/dev/null || true
+  wait "$pid" 2>/dev/null || true
+  sleep 0.2
+  rm -rf "$prof" || true
+  if [[ ! -s "$out" ]]; then
+    echo "screenshot failed: $out" >&2
+    exit 1
+  fi
   echo "  $out ($(wc -c < "$out") bytes)"
 }
 U="http://127.0.0.1:$PORT"

@@ -174,6 +174,7 @@ h3 { margin: 0; font-size: 1rem; }
   border-radius: 16px;
   padding: 12px;
   min-height: 180px;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -182,7 +183,7 @@ h3 { margin: 0; font-size: 1rem; }
   border-color: rgba(255, 122, 89, 0.45);
   box-shadow: inset 0 0 0 1px rgba(255, 122, 89, 0.15);
 }
-.day-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.day-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .day-name { font-weight: 750; font-size: 0.95rem; }
 .day-date { display: block; color: var(--muted); font-size: 0.75rem; font-weight: 650; margin-top: 2px; }
 .today-chip {
@@ -269,7 +270,7 @@ h3 { margin: 0; font-size: 1rem; }
   background: rgba(0, 0, 0, 0.18);
 }
 .meal-emoji { font-size: 1.6rem; line-height: 1; }
-.meal-name { font-weight: 700; font-size: 0.98rem; }
+.meal-name { font-weight: 700; font-size: 0.98rem; overflow-wrap: anywhere; }
 .meal-meta { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; font-size: 0.78rem; color: var(--muted); }
 .badge {
   display: inline-flex;
@@ -415,7 +416,7 @@ dialog::backdrop { background: rgba(0, 0, 0, 0.55); }
 .gate-list { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 8px; }
 .gate-list li { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .foot { margin-top: 18px; color: var(--muted); font-size: 0.8rem; }
-@media (max-width: 1100px) {
+@media (max-width: 1240px) {
   .week-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 @media (max-width: 720px) {
