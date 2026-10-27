@@ -12,6 +12,12 @@ if ! ss -ltn | grep -q "127.0.0.1:$PORT "; then
     sleep 0.2
   done
 fi
+curl -sf -X POST "http://127.0.0.1:$PORT/api/week/slot" \
+  -H 'Content-Type: application/json' \
+  -d '{"day":"Mon","slot":"leftover"}' >/dev/null
+curl -sf -X POST "http://127.0.0.1:$PORT/api/week/slot" \
+  -H 'Content-Type: application/json' \
+  -d '{"day":"Fri","slot":"leftover"}' >/dev/null
 shot() {
   local url="$1" out="$2" size="$3"
   shift 3 || true

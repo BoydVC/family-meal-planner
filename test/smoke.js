@@ -111,6 +111,8 @@ async function main() {
   assert.match(page.body, /EXAMPLE\/SYNTHETIC/);
   assert.match(page.body, /Not KPD/);
   assert.match(page.body, /Practice/);
+  assert.match(page.body, /America\/New_York/);
+  assert.match(page.body, /Leftover/);
 
   const meals = await request("/api/meals");
   assert.ok(meals.body.meals.length >= 8);
@@ -130,6 +132,23 @@ async function main() {
   const garlic = produce.items.find((item) => item.item === "garlic");
   assert.equal(garlic.merged, true);
   assert.equal(garlic.qty, "5 cloves");
+
+  const desk = await request("/api/week");
+  assert.equal(desk.body.timezone, "America/New_York");
+  assert.equal(desk.body.days.length, 7);
+  assert.equal(desk.body.days[0].day, "Mon");
+  assert.equal(desk.body.days[6].day, "Sun");
+  const leftover = await post("/api/week/slot", { day: "Wed", slot: "leftover" });
+  assert.equal(leftover.status, 200);
+  assert.equal(leftover.body.ordered, false);
+  assert.equal(leftover.body.external, false);
+  const afterSlot = leftover.body.grocery.aisles
+    .find((aisle) => aisle.aisle === "Produce")
+    .items.find((item) => item.item === "garlic");
+  assert.equal(afterSlot.qty, "3 cloves");
+  const refusedOrder = await post("/api/auto_order", { apply: true, slot: "leftover" });
+  assert.equal(refusedOrder.status, 403);
+  assert.equal(refusedOrder.body.ok, false);
 
   const fridge = await request("/api/fridge");
   assert.equal(fridge.body.printable, true);
