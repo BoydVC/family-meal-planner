@@ -1,27 +1,33 @@
 #!/usr/bin/env bash
+# Capture the loopback planner. Requires the Node server (npm start).
 set -euo pipefail
 cd "$(dirname "$0")/.."
-PORT="${FAMILY_MEAL_PLANNER_PORT:-4309}"
+PORT="${PORT:-4309}"
 CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser)"
-mkdir -p screenshots dist
-if [[ ! -f dist/family-meal-planner.html ]]; then python3 build.py; fi
+mkdir -p screenshots
 if ! ss -ltn | grep -q "127.0.0.1:$PORT "; then
-  nohup python3 server.py > /tmp/family-meal-planner-$PORT.log 2>&1 &
-  sleep 1
+  STORE_PATH="$(mktemp)" QUIET=1 nohup npm start > "/tmp/family-meal-planner-$PORT.log" 2>&1 &
+  for _ in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
+    curl -sf "http://127.0.0.1:$PORT/api/health" >/dev/null && break
+    sleep 0.2
+  done
 fi
 shot() {
-  local url="$1" out="$2" size="$3"; shift 3 || true
-  local prof; prof="$(mktemp -d /tmp/fmpshot.XXXX)"
+  local url="$1" out="$2" size="$3"
+  shift 3 || true
+  local prof
+  prof="$(mktemp -d /tmp/fmpshot.XXXX)"
   "$CHROME" --headless=new --no-sandbox --disable-gpu --hide-scrollbars --force-device-scale-factor=1 \
-    --run-all-compositor-stages-before-draw --virtual-time-budget=28000 \
+    --run-all-compositor-stages-before-draw --virtual-time-budget=8000 \
     --window-size="$size" --user-data-dir="$prof" --screenshot="$out" "$@" "$url" >/dev/null 2>&1
-  rm -rf "$prof"; echo "  $out ($(wc -c < "$out") bytes)"
+  rm -rf "$prof"
+  echo "  $out ($(wc -c < "$out") bytes)"
 }
 U="http://127.0.0.1:$PORT"
-shot "file://$PWD/dist/family-meal-planner.html#week" screenshots/00-best-home.png 1440,1100
 shot "$U/#week" screenshots/00-desktop-week.png 1440,1000
 shot "$U/#grocery" screenshots/01-grocery.png 1440,1100
 shot "$U/#fridge" screenshots/02-fridge.png 1440,1100
-shot "$U/#about" screenshots/03-about.png 1440,1000
-shot "$U/#week" screenshots/04-phone.png 390,844 --user-agent="Mozilla/5.0 (iPhone)"
+shot "$U/#notes" screenshots/03-notes.png 1440,1100
+shot "$U/#about" screenshots/04-about.png 1440,1100
+shot "$U/#week" screenshots/05-phone.png 390,844 --user-agent="Mozilla/5.0 (iPhone)"
 echo "screenshots done"
