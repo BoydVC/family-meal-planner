@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#1a120c"/>
+<meta name="description" content="Millersville weeknight planner. EXAMPLE/SYNTHETIC meals only. Not KPD. Local to this computer."/>
+<title>Family Meal Planner · Millersville weeknights</title>
+<link rel="stylesheet" href="/app.css"/>
+</head>
+<body data-kpd="false">
+<div class="bg" aria-hidden="true"></div>
+<div id="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">🍽️</div>
+      <div>
+        <h1>Family Meal Planner</h1>
+        <p class="tag">Millersville weeknights · example household</p>
+      </div>
+    </div>
+    <div class="top-pills">
+      <span class="pill sample">EXAMPLE/SYNTHETIC</span>
+      <span class="pill">Not KPD</span>
+      <span class="pill" id="weekPill">This week</span>
+    </div>
+  </header>
+
+  <div class="banner" id="sampleBanner">
+    EXAMPLE/SYNTHETIC meals only. Not a real family's menu. Not KPD. This page stays on 127.0.0.1.
+  </div>
+  <p id="toast" class="toast" role="status" hidden></p>
+
+  <nav class="tabs" role="tablist" aria-label="Planner screens">
+    <a href="#week" class="tab active" data-screen="week">Week</a>
+    <a href="#grocery" class="tab" data-screen="grocery">Grocery</a>
+    <a href="#fridge" class="tab" data-screen="fridge">Fridge</a>
+    <a href="#notes" class="tab" data-screen="notes">Notes</a>
+    <a href="#about" class="tab" data-screen="about">About</a>
+  </nav>
+
+  <main>
+    <section id="screen-week" class="screen active" role="tabpanel">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <h2>Dinner week</h2>
+          <p class="hint">Flip a Practice switch on sports nights. Swap keeps those nights on fast meals.</p>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" class="btn" id="btnShuffle">Shuffle week</button>
+          <button type="button" class="btn ghost" id="btnClear">Clear</button>
+        </div>
+      </div>
+      <div class="week-grid" id="weekGrid" aria-label="Monday through Sunday dinners"></div>
+    </section>
+
+    <section id="screen-grocery" class="screen" role="tabpanel" hidden>
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <h2>Grocery list</h2>
+          <p class="hint">Merged by aisle from this week's meals. Same item, same unit, one line.</p>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" class="btn" id="btnCopy">Copy list</button>
+          <button type="button" class="btn ghost" id="btnUncheck">Uncheck all</button>
+        </div>
+      </div>
+      <div id="groceryEmpty" class="empty panel" hidden>
+        <p>No meals planned yet. Fill the week grid first.</p>
+      </div>
+      <div id="groceryByAisle" class="aisle-stack" data-testid="grocery-list"></div>
+    </section>
+
+    <section id="screen-fridge" class="screen" role="tabpanel" hidden>
+      <div class="toolbar no-print">
+        <div class="toolbar-left">
+          <h2>Fridge menu</h2>
+          <p class="hint">One printable page for the fridge door. Applied notes only.</p>
+        </div>
+        <div class="toolbar-actions">
+          <button type="button" class="btn" id="btnPrint">Print</button>
+        </div>
+      </div>
+      <article class="fridge-sheet panel" id="fridgeSheet" data-testid="fridge-sheet">
+        <header class="fridge-head">
+          <div>
+            <h2 class="fridge-title">Millersville weeknight dinners</h2>
+            <p class="fridge-sub" id="fridgeDates">EXAMPLE/SYNTHETIC · Not KPD</p>
+          </div>
+          <div class="fridge-badge">EXAMPLE</div>
+        </header>
+        <div class="fridge-grid" id="fridgeGrid"></div>
+        <footer class="fridge-foot">
+          <span>Practice nights are marked. Notes appear after Apply.</span>
+          <span>Local print · Not KPD</span>
+        </footer>
+      </article>
+    </section>
+
+    <section id="screen-notes" class="screen" role="tabpanel" hidden>
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <h2>Notes</h2>
+          <p class="hint">Hold stages a draft. Apply writes it through the local stub. Nothing leaves this computer.</p>
+        </div>
+      </div>
+      <div id="notesGrid" class="notes-grid"></div>
+    </section>
+
+    <section id="screen-about" class="screen" role="tabpanel" hidden>
+      <div class="panel about-card">
+        <h2>Two-minute how-to</h2>
+        <ol class="about-list">
+          <li>Run <code>npm start</code> and open <code>http://127.0.0.1:4309/</code>.</li>
+          <li>Flip a Practice switch. Practice nights keep fast meals.</li>
+          <li>Press Swap or Choose to change a dinner.</li>
+          <li>Open Grocery and read the aisle merge.</li>
+          <li>Open Fridge and press Print.</li>
+          <li>On Notes, type a reminder, press Hold, then Apply.</li>
+        </ol>
+        <h2>Refused gates</h2>
+        <p>These actions answer 403. Checking one does not order, check out, invent a meal, share outside this computer, or text a child.</p>
+        <ul class="gate-list" id="gateList"></ul>
+        <p class="muted" id="aboutStats"></p>
+      </div>
+    </section>
+  </main>
+  <footer class="foot">Local only · 127.0.0.1 · EXAMPLE/SYNTHETIC · Not KPD</footer>
+</div>
+
+<dialog id="picker">
+  <div class="picker-head">
+    <h3 id="pickerTitle">Pick a meal</h3>
+    <button type="button" class="btn ghost sm" id="btnClosePicker">Close</button>
+  </div>
+  <p class="hint" id="pickerHint"></p>
+  <div class="meal-list" id="mealList"></div>
+</dialog>
+<script src="/app.js" defer></script>
+</body>
+</html>

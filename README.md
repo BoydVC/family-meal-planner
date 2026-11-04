@@ -1,34 +1,47 @@
 # Family Meal Planner
 
-Weeknight dinner planner for the Boyd household — fast meals on Char (Aspire) and Vic (Hornets / API) practice nights, grocery list by aisle, printable fridge menu. TokenMax burn build.
+Millersville weeknight planner for an example household. Every meal is **EXAMPLE/SYNTHETIC**. This demo is **not KPD**: no kids' personal data, no school roster, and no way to text anyone.
 
-**Sample recipes only** (`data/meals.json` is labeled EXAMPLE — not the family's real menu). Local-only; no grocery ordering or accounts.
+The server listens on **127.0.0.1** only. Grocery ordering, checkout, invented meals, external sharing, and texting kids are gates. Each one answers **403**.
 
-## Screens
+## Two-minute how-to
 
-1. **Week** — Mon–Sun dinner grid; toggle practice nights for ≤20‑min picks; shuffle / lucky / choose  
-2. **Grocery** — auto-merged ingredients sorted by aisle, checkable list, copy  
-3. **Fridge** — AirPrint-friendly one-pager for the fridge door  
-4. **About** — sample disclaimer + stats
+About two minutes, on this computer.
 
-## Run
+1. **Start (15 seconds).** From the repo root run `npm start`. Open [http://127.0.0.1:4309/](http://127.0.0.1:4309/). You should see the week grid and an EXAMPLE/SYNTHETIC banner.
+2. **Practice switches (20 seconds).** On Tuesday, Wednesday, or Thursday, flip the Practice switch. Practice nights only keep fast meals. Turning a switch on swaps a slow dinner for a fast one.
+3. **Swap a dinner (20 seconds).** Press **Swap** on a day to take the next eligible meal, or **Choose** to pick one. A slow meal stays blocked while that night is a practice night.
+4. **Grocery aisle merge (20 seconds).** Open **Grocery**. Ingredients from the week are merged into one line per item and grouped by aisle. Matching quantities with the same unit are summed (garlic from two dinners becomes one produce line).
+5. **Fridge print (15 seconds).** Open **Fridge** and press **Print**. You get one page for the fridge door. A note stays off that page until you apply it.
+6. **Notes, Hold then Apply (30 seconds).** Open **Notes**, type a reminder, press **Hold**, then **Apply**. Hold stages the draft. Apply writes it through the local stub onto this computer only. Nothing is emailed, posted, or texted. Reload the page and the applied note is still there.
+
+Stop the server with Ctrl+C.
+
+## Checks
 
 ```bash
-./run.sh          # build + serve http://127.0.0.1:4309/
-./run.sh --shots  # + screenshots/
+npm test
+npm run smoke
 ```
 
-Offline single file: `dist/family-meal-planner.html`
+Both should pass. `npm test` covers the planner and the HTTP gates. `npm run smoke` boots `src/server.js` and walks the same loopback path.
+
+## What the server refuses
+
+These routes always return 403. They do not place an order, invent a meal, share outside this machine, or text a child:
+
+- `/api/auto_order`
+- `/api/auto_checkout`
+- `/api/fabricate_meal`
+- `/api/share_external`
+- `/api/auto_text_kids`
+
+A request that names one of those gates on another route is refused the same way.
 
 ## Layout
 
-- `web/` — index.html, app.css, app.js  
-- `data/meals.json` — SAMPLE meal + ingredient DB  
-- `build.py` / `server.py` / `tests/screenshot.sh`
-
-
----
-## Repo notes
-- **Built:** Oct 2026 (TokenMax build week; see SHORTLIST/ledger), by TokenMax (Boyd's Grok Bot) on the Grok Bot box.
-- **Run:** `./run.sh` (then open the localhost URL it prints).
-- Imported from `/workspace/tokenmax/family-meal-planner` on Oct 23, 2026. node_modules, virtualenvs, logs and files over 20 MB were left out.
+- `src/server.js` — loopback server
+- `src/planner.js` — week, practice swaps, aisle merge, hold/apply
+- `public/` — week, grocery, fridge, notes
+- `data/meals.json` — EXAMPLE/SYNTHETIC meal pack
+- `test/` — `npm test` and `npm run smoke`

@@ -1,0 +1,14 @@
+{
+  "name": "family-meal-planner",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Millersville weeknight planner. EXAMPLE/SYNTHETIC meals only. Not KPD. Loopback only.",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/planner.test.js test/server.test.js",
+    "smoke": "node test/smoke.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

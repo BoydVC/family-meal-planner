@@ -1,10 +1,12 @@
 {
   "meta": {
-    "title": "Family Meal Planner — sample recipes",
-    "disclaimer": "EXAMPLE / sample recipe pack for TokenMax demo. Not the Boyd family's real menu or grocery list.",
-    "source": "EXAMPLE / sample",
+    "title": "Family Meal Planner — EXAMPLE/SYNTHETIC",
+    "disclaimer": "EXAMPLE/SYNTHETIC meals only. Not a real family's menu. Not KPD.",
+    "source": "EXAMPLE/SYNTHETIC",
+    "classification": "EXAMPLE/SYNTHETIC",
+    "kpd": false,
     "version": 1,
-    "household": "Boyd (Char & Vic practice nights)",
+    "household": "Example household · Millersville",
     "aisles": [
       "Produce",
       "Meat & Seafood",
@@ -26,9 +28,9 @@
     "Sun": false
   },
   "practiceNotes": {
-    "Tue": "Char Aspire + Vic practices typical",
-    "Wed": "Vic Hornets / API practice nights",
-    "Thu": "Char Aspire (St Mary's) — Boyds drive"
+    "Tue": "EXAMPLE practice block",
+    "Wed": "EXAMPLE practice block",
+    "Thu": "EXAMPLE practice block"
   },
   "meals": [
     {
@@ -88,7 +90,9 @@
         "Toss chicken + peppers + onion with seasoning.",
         "Roast 425°F ~18 min.",
         "Warm tortillas, assemble, squeeze lime."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "pasta-pesto",
@@ -137,7 +141,9 @@
         "Boil pasta; add broccoli last 3 min.",
         "Drain, toss with pesto + oil + garlic.",
         "Top with parm."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "quesadillas",
@@ -181,7 +187,9 @@
         "Fill tortillas with cheese + chicken.",
         "Skillet 2–3 min/side.",
         "Slice apples on the side."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "stir-fry",
@@ -235,7 +243,9 @@
         "Sear beef hot & fast.",
         "Add veggies + sauce.",
         "Serve over microwaved rice."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "pizza-night",
@@ -279,7 +289,9 @@
         "Stretch dough on sheet pans.",
         "Sauce, cheese, toppings.",
         "Bake 475°F ~12–14 min."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "salmon-sheets",
@@ -328,7 +340,9 @@
         "Par-roast potatoes 10 min.",
         "Add salmon + asparagus, roast 12 min.",
         "Finish with lemon + butter."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "burger-bowls",
@@ -376,7 +390,9 @@
       "steps": [
         "Make smash patties.",
         "Build bowls: lettuce, tomato, pickles, cheese, sauce."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "soup-grilled",
@@ -420,7 +436,9 @@
         "Heat soup with splash of milk.",
         "Grill cheese sandwiches.",
         "Dip away."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "chicken-rice",
@@ -474,7 +492,9 @@
         "Brown chicken, set aside.",
         "Sauté onion/carrot/garlic, add rice + broth.",
         "Nestle chicken, simmer covered ~25 min; stir in peas."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "lasagna",
@@ -528,7 +548,9 @@
         "Brown beef, mix with marinara.",
         "Layer noodles, ricotta+egg+spinach, sauce, mozzarella.",
         "Bake 375°F 45–50 min; rest 10."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "roast-chicken",
@@ -582,7 +604,9 @@
         "Season bird, stuff lemon + herbs.",
         "Surround with veg.",
         "Roast 425°F ~60–70 min to 165°F."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "breakfast-dinner",
@@ -631,7 +655,9 @@
         "Oven-bake bacon.",
         "Pancakes + scrambled eggs.",
         "Berries + syrup."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "chili",
@@ -685,7 +711,9 @@
         "Brown turkey + onion.",
         "Add tomatoes, beans, spices; simmer 20.",
         "Bake cornbread alongside."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     },
     {
       "id": "fish-sticks",
@@ -729,7 +757,9 @@
         "Bake fish sticks per box.",
         "Microwave peas.",
         "Serve with carrot cups + dips."
-      ]
+      ],
+      "source": "EXAMPLE/SYNTHETIC",
+      "classification": "EXAMPLE/SYNTHETIC"
     }
   ]
 }
