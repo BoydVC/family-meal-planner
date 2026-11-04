@@ -44,6 +44,7 @@ function persistStore(file, state) {
     kpd: false,
     practice: state.practice,
     meals: state.meals,
+    slots: state.slots,
     held: state.held,
     applied: state.applied,
   };
@@ -220,11 +221,14 @@ function createServer(options = {}) {
         localOnly: true,
         host: HOST,
         household: "Example household · Millersville",
+        timezone: planner.TIMEZONE,
         gates: planner.GATES,
         notes: { hold: true, apply: "local-stub", external: false },
         features: [
           "practice-switches",
           "practice-night-swaps",
+          "week-desk",
+          "planned-leftover",
           "aisle-merge",
           "fridge-printable",
           "notes-hold-apply",
@@ -355,6 +359,45 @@ function createServer(options = {}) {
         day,
         meal: planner.publicMeal(result.meal),
         week: planner.presentWeek(data, state, HOST),
+      });
+      return;
+    }
+
+    if (method === "POST" && pathname === "/api/week/slot") {
+      const day = planner.normalizeDay(body.day);
+      if (!day) {
+        sendJson(res, 400, {
+          ok: false,
+          error: "bad_day",
+          message: "Use a weekday, Mon through Sun.",
+        });
+        return;
+      }
+      const result = planner.setSlot(state, day, body.slot);
+      if (result.error) {
+        sendJson(res, result.status, {
+          ok: false,
+          error: result.error,
+          message: result.message,
+        });
+        return;
+      }
+      state = result.state;
+      persist();
+      sendJson(res, 200, {
+        ok: true,
+        day,
+        slot: result.slot,
+        ordered: false,
+        external: false,
+        transport: "local-stub",
+        week: planner.presentWeek(data, state, HOST),
+        grocery: {
+          ok: true,
+          kpd: false,
+          classification: planner.CLASSIFICATION,
+          ...planner.mergeGrocery(data, state),
+        },
       });
       return;
     }

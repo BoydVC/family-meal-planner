@@ -40,6 +40,11 @@ test("readme is a two-minute how-to", () => {
   assert.match(readme, /Hold/);
   assert.match(readme, /Apply/);
   assert.match(readme, /not KPD/i);
+  assert.match(readme, /America\/New_York/);
+  assert.match(readme, /Leftover/);
+  assert.match(readme, /Instacart/);
+  assert.match(readme, /403/);
+  assert.match(readme, /never reports an Instacart or auto-order success/);
   for (const gate of planner.GATES) assert.match(readme, new RegExp(gate));
 });
 
@@ -128,4 +133,57 @@ test("week label uses an en dash and seven days", () => {
   assert.equal(week.kpd, false);
   assert.equal(week.host, "127.0.0.1");
   assert.equal(week.days.every((day) => !day.meal || day.meal.source === "EXAMPLE/SYNTHETIC"), true);
+});
+
+test("week desk dates follow America/New_York Monday through Sunday", () => {
+  const tuesday = new Date("2026-10-27T18:00:00Z");
+  const span = planner.weekSpan(tuesday);
+  assert.equal(span.timezone, "America/New_York");
+  assert.equal(span.label, "Oct 26 – Nov 1");
+  assert.equal(span.today, "2026-10-27");
+  assert.deepEqual(
+    span.days.map((day) => day.day),
+    ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  );
+  assert.equal(span.days[0].date, "2026-10-26");
+  assert.equal(span.days[1].today, true);
+  assert.equal(span.days[6].date, "2026-11-01");
+
+  const stillSunday = planner.weekSpan(new Date("2026-10-26T03:30:00Z"));
+  assert.equal(stillSunday.today, "2026-10-25");
+  assert.equal(stillSunday.label, "Oct 19 – Oct 25");
+  assert.equal(stillSunday.days[6].today, true);
+
+  const week = planner.presentWeek(data, planner.freshState(data), "127.0.0.1", tuesday);
+  assert.equal(week.timezone, "America/New_York");
+  assert.equal(week.days[1].today, true);
+  assert.equal(week.days.every((day) => day.slot === "planned"), true);
+  assert.equal(week.counts.leftover, 0);
+  assert.equal(week.counts.planned, 7);
+});
+
+test("leftover slots stay off the grocery list and do not order", () => {
+  const state = planner.freshState(data);
+  const marked = planner.setSlot(state, "Wed", "leftover");
+  assert.equal(marked.slot, "leftover");
+  assert.equal(marked.state.external, false);
+  assert.equal(marked.state.slots.Wed, "leftover");
+  assert.equal(marked.state.meals.Wed, "pasta-pesto");
+
+  const grocery = planner.mergeGrocery(data, marked.state);
+  const garlic = item(grocery, "Produce", "garlic");
+  assert.equal(garlic.qty, "3 cloves");
+  assert.equal(garlic.merged, false);
+  assert.deepEqual(grocery.skippedLeftovers, ["Wed"]);
+
+  const empty = planner.setSlot(planner.clearMeals(state), "Mon", "leftover");
+  assert.equal(empty.status, 409);
+  assert.equal(empty.error, "needs_meal");
+  assert.equal(planner.setSlot(state, "Mon", "ordered").status, 400);
+
+  const shuffled = planner.shuffleMeals(data, marked.state, () => 0);
+  assert.equal(shuffled.slots.Wed, "planned");
+  const cleared = planner.clearMeals(marked.state);
+  assert.equal(cleared.slots.Wed, "planned");
+  assert.equal(cleared.meals.Wed, null);
 });

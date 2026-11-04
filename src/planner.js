@@ -31,6 +31,8 @@ const EXAMPLE_WEEK = Object.freeze({
 });
 
 const CLASSIFICATION = "EXAMPLE/SYNTHETIC";
+const TIMEZONE = "America/New_York";
+const SLOTS = Object.freeze(["planned", "leftover"]);
 
 function isFast(meal) {
   return !!(meal && (meal.fast === true || Number(meal.minutes) <= 20));
@@ -79,9 +81,12 @@ function freshState(data) {
     else if (practice[day] && !isFast(meal)) id = nextMealId(data, null, true);
     meals[day] = id;
   }
+  const slots = {};
+  for (const day of DAYS) slots[day] = "planned";
   return {
     practice,
     meals,
+    slots,
     held: {},
     applied: {},
     transport: "local-stub",
@@ -122,6 +127,9 @@ function sanitizeState(data, parsed) {
         external: false,
       };
     }
+    const slot = parsed.slots?.[day];
+    if (slot === "planned" || slot === "leftover") base.slots[day] = slot;
+    if (!base.meals[day]) base.slots[day] = "planned";
   }
   return base;
 }
@@ -154,6 +162,7 @@ function cloneState(state) {
   return {
     practice: { ...state.practice },
     meals: { ...state.meals },
+    slots: { ...state.slots },
     held: { ...state.held },
     applied: { ...state.applied },
     transport: "local-stub",
@@ -200,7 +209,12 @@ function mergeQtyList(qtys) {
 function mergeGrocery(data, state) {
   const aisles = (data.meta && data.meta.aisles) || [];
   const map = new Map();
+  const skippedLeftovers = [];
   for (const day of DAYS) {
+    if (state.slots[day] === "leftover") {
+      if (state.meals[day]) skippedLeftovers.push(day);
+      continue;
+    }
     const meal = mealById(data, state.meals[day]);
     if (!meal || !Array.isArray(meal.ingredients)) continue;
     for (const ing of meal.ingredients) {
@@ -236,7 +250,7 @@ function mergeGrocery(data, state) {
     items.sort((a, b) => a.item.localeCompare(b.item));
     result.push({ aisle, items });
   }
-  return { merged: true, byAisle: true, aisles: result };
+  return { merged: true, byAisle: true, aisles: result, skippedLeftovers };
 }
 
 function setPractice(data, state, day, on) {
@@ -281,8 +295,32 @@ function assignMeal(data, state, day, mealId) {
 
 function clearMeals(state) {
   const next = cloneState(state);
-  for (const day of DAYS) next.meals[day] = null;
+  for (const day of DAYS) {
+    next.meals[day] = null;
+    next.slots[day] = "planned";
+  }
   return next;
+}
+
+function setSlot(state, day, slot) {
+  const value = String(slot ?? "").trim().toLowerCase();
+  if (!SLOTS.includes(value)) {
+    return {
+      error: "bad_slot",
+      status: 400,
+      message: "Mark the slot planned or leftover.",
+    };
+  }
+  if (value === "leftover" && !state.meals[day]) {
+    return {
+      error: "needs_meal",
+      status: 409,
+      message: "Pick a dinner before marking it leftover.",
+    };
+  }
+  const next = cloneState(state);
+  next.slots[day] = value;
+  return { state: next, slot: value };
 }
 
 function shuffleMeals(data, state, rng = Math.random) {
@@ -293,11 +331,13 @@ function shuffleMeals(data, state, rng = Math.random) {
     if (!pool.length) pool = eligible(data, !!next.practice[day]);
     if (!pool.length) {
       next.meals[day] = null;
+      next.slots[day] = "planned";
       continue;
     }
     const index = Math.floor(rng() * pool.length) % pool.length;
     const pick = pool[index];
     next.meals[day] = pick.id;
+    next.slots[day] = "planned";
     used.add(pick.id);
   }
   return next;
@@ -337,29 +377,49 @@ function applyNote(state, day) {
   return { state: next, applied };
 }
 
-function weekLabel(now = new Date()) {
-  const tz = "America/New_York";
+function weekSpan(now = new Date()) {
   const ymd = new Intl.DateTimeFormat("en-CA", {
-    timeZone: tz,
+    timeZone: TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   }).format(now);
   const wd = new Intl.DateTimeFormat("en-US", {
-    timeZone: tz,
+    timeZone: TIMEZONE,
     weekday: "short",
-  }).format(now);
+  })
+    .format(now)
+    .replace(/\./g, "")
+    .slice(0, 3);
   const idx = DAYS.indexOf(wd);
+  const offset = idx >= 0 ? idx : 0;
   const [year, month, day] = ymd.split("-").map(Number);
-  const civil = new Date(Date.UTC(year, month - 1, day));
-  const monday = new Date(civil.getTime() - Math.max(idx, 0) * 86400000);
-  const sunday = new Date(monday.getTime() + 6 * 86400000);
+  const monday = Date.UTC(year, month - 1, day) - offset * 86400000;
   const fmt = new Intl.DateTimeFormat("en-US", {
     month: "short",
     day: "numeric",
     timeZone: "UTC",
   });
-  return `${fmt.format(monday)} – ${fmt.format(sunday)}`;
+  const days = DAYS.map((name, i) => {
+    const date = new Date(monday + i * 86400000);
+    const iso = date.toISOString().slice(0, 10);
+    return {
+      day: name,
+      date: iso,
+      dateLabel: fmt.format(date),
+      today: iso === ymd,
+    };
+  });
+  return {
+    timezone: TIMEZONE,
+    label: `${fmt.format(new Date(monday))} – ${fmt.format(new Date(monday + 6 * 86400000))}`,
+    today: ymd,
+    days,
+  };
+}
+
+function weekLabel(now = new Date()) {
+  return weekSpan(now).label;
 }
 
 function presentCatalog(data) {
@@ -400,16 +460,18 @@ function publicMeal(meal) {
   };
 }
 
-function presentWeek(data, state, host) {
-  return {
-    ok: true,
-    label: weekLabel(),
-    classification: CLASSIFICATION,
-    kpd: false,
-    host: host || "127.0.0.1",
-    days: DAYS.map((day) => ({
+function presentWeek(data, state, host, now = new Date()) {
+  const span = weekSpan(now);
+  const days = span.days.map((slotDay) => {
+    const day = slotDay.day;
+    const slot = state.slots[day] === "leftover" ? "leftover" : "planned";
+    return {
       day,
       name: DAY_FULL[day],
+      date: slotDay.date,
+      dateLabel: slotDay.dateLabel,
+      today: slotDay.today,
+      slot,
       practice: !!state.practice[day],
       practiceHint: day === "Tue" || day === "Wed" || day === "Thu" ? "EXAMPLE practice block" : "",
       meal: publicMeal(mealById(data, state.meals[day])),
@@ -424,7 +486,21 @@ function presentWeek(data, state, host) {
             external: false,
           }
         : null,
-    })),
+    };
+  });
+  return {
+    ok: true,
+    label: span.label,
+    timezone: span.timezone,
+    classification: CLASSIFICATION,
+    kpd: false,
+    host: host || "127.0.0.1",
+    counts: {
+      planned: days.filter((day) => day.meal && day.slot === "planned").length,
+      leftover: days.filter((day) => day.slot === "leftover").length,
+      open: days.filter((day) => !day.meal).length,
+    },
+    days,
   };
 }
 
@@ -463,9 +539,14 @@ function presentFridge(data, state) {
     classification: CLASSIFICATION,
     kpd: false,
     label: week.label,
+    timezone: week.timezone,
     days: week.days.map((day) => ({
       day: day.day,
       name: day.name,
+      date: day.date,
+      dateLabel: day.dateLabel,
+      today: day.today,
+      slot: day.slot,
       practice: day.practice,
       mealId: day.meal && day.meal.id,
       mealName: day.meal ? day.meal.name : null,
@@ -496,6 +577,8 @@ module.exports = {
   GATES,
   EXAMPLE_WEEK,
   CLASSIFICATION,
+  TIMEZONE,
+  SLOTS,
   isFast,
   isGate,
   stampMeal,
@@ -511,9 +594,11 @@ module.exports = {
   swapDay,
   assignMeal,
   clearMeals,
+  setSlot,
   shuffleMeals,
   holdNote,
   applyNote,
+  weekSpan,
   weekLabel,
   presentCatalog,
   publicMeal,
