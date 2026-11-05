@@ -94,7 +94,7 @@ test("pages and meals stay EXAMPLE/SYNTHETIC", async (t) => {
     assert.equal(meal.classification, "EXAMPLE/SYNTHETIC");
   }
   const raw = JSON.stringify(meals.body);
-  assert.doesNotMatch(raw, /Char|Vic|St Mary|Hornets|Aspire/);
+  assert.doesNotMatch(raw, /Char|Sam|St Mary|Hornets|Aspire/);
 });
 
 test("practice switches, swaps, aisle merge, and fridge print", async (t) => {

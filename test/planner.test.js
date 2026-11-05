@@ -23,7 +23,7 @@ test("meal pack is EXAMPLE/SYNTHETIC and not KPD", () => {
   assert.match(data.meta.source, /SYNTHETIC/);
   assert.match(data.meta.classification, /EXAMPLE\/SYNTHETIC/);
   const raw = JSON.stringify(data);
-  assert.doesNotMatch(raw, /Char|Vic|St Mary|Hornets|Aspire/);
+  assert.doesNotMatch(raw, /Char|Sam|St Mary|Hornets|Aspire/);
   assert.doesNotMatch(raw, /\b\d{3}[-.\s]\d{3}[-.\s]\d{4}\b/);
   for (const meal of data.meals) {
     assert.equal(meal.source, "EXAMPLE/SYNTHETIC");
